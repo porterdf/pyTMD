@@ -246,6 +246,7 @@ def compute_tidal_elevations(tide_dir, input_file, output_file,
         parse_dates = (TIME_STANDARD.lower() == 'datetime')
         dinput = pyTMD.spatial.from_ascii(input_file, columns=VARIABLES,
             delimiter=DELIMITER, header=HEADER, parse_dates=parse_dates)
+        print("csv")
     elif (FORMAT == 'netCDF4'):
         dinput = pyTMD.spatial.from_netCDF4(input_file, timename=VARIABLES[0],
             xname=VARIABLES[2], yname=VARIABLES[1], varname=VARIABLES[3])
@@ -260,6 +261,8 @@ def compute_tidal_elevations(tide_dir, input_file, output_file,
     # update time variable if entered as argument
     if TIME is not None:
         dinput['time'] = np.copy(TIME)
+
+    print(dinput)
 
     # converting x,y from projection to latitude/longitude
     crs1 = get_projection(dinput['attributes'], PROJECTION)
@@ -310,7 +313,7 @@ def compute_tidal_elevations(tide_dir, input_file, output_file,
             pyTMD.time.count_leap_seconds(np.atleast_1d(GPS_Epoch_Time))
     else:
         leap_seconds = 0.0
-
+    
     if (TIME_STANDARD.lower() == 'datetime'):
         # convert delta time array from datetime object
         # to days relative to 1992-01-01T00:00:00
